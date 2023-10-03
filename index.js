@@ -1,7 +1,9 @@
+require('dotenv').config()
 const express = require('express')
 var morgan = require('morgan')
 const app = express()
 const cors = require('cors')
+const Person = require('./models/person')
 
 app.use(express.static('dist'))
 app.use(cors())
@@ -24,35 +26,37 @@ app.use(requestLogger)
 morgan.token('person', function (req, res) { return JSON.stringify(req.body) })
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :person'))
 
-let persons = [
-    { 
-      "id": 1,
-      "name": "Arto Hellas", 
-      "number": "040-123456"
-    },
-    { 
-      "id": 2,
-      "name": "Ada Lovelace", 
-      "number": "39-44-5323523"
-    },
-    { 
-      "id": 3,
-      "name": "Dan Abramov", 
-      "number": "12-43-234345"
-    },
-    { 
-      "id": 4,
-      "name": "Mary Poppendieck", 
-      "number": "39-23-6423122"
-    }
-]
+// let persons = [
+//     { 
+//       "id": 1,
+//       "name": "Arto Hellas", 
+//       "number": "040-123456"
+//     },
+//     { 
+//       "id": 2,
+//       "name": "Ada Lovelace", 
+//       "number": "39-44-5323523"
+//     },
+//     { 
+//       "id": 3,
+//       "name": "Dan Abramov", 
+//       "number": "12-43-234345"
+//     },
+//     { 
+//       "id": 4,
+//       "name": "Mary Poppendieck", 
+//       "number": "39-23-6423122"
+//     }
+// ]
 
 app.get('/', (request, response) => {
   response.send('<h1>Welcome to the database of persons!</h1>')
 })
 
 app.get('/api/persons', (request, response) => {
-  response.json(persons)
+  Person.findById(request.params.id).then(persons => {
+    response.json(persons)
+  })
 })
 
 app.get('/api/persons/:id', (request, response) => {
@@ -81,7 +85,10 @@ app.delete('/api/persons/:id', (request, response) => {
 })
 
 app.post('/api/persons', (request, response) => {
-  const person = request.body
+  const person = new Person({
+    name: request.body
+    // number: request.body
+  })
   person.id = Math.floor(Math.random()*1000000)
 
   if (persons.map(person => person.name).includes(person.name)) {
@@ -93,8 +100,11 @@ app.post('/api/persons', (request, response) => {
       error: 'name field is empty'
     })
   } else {
-    persons = persons.concat(person)
-    response.json(person)
+    // persons = persons.concat(person)
+    person.save().then(savedPerson => {
+      // persons = persons.concat(savedPerson)
+      response.json(savedPerson)
+    })
   }
 })
 
@@ -119,6 +129,7 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms'))
 
 app.use(unknownEndpoint)
 
-const PORT = 3001
-app.listen(PORT)
-console.log(`Server running on port ${PORT}`)
+const PORT = process.env.PORT
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`)
+})

@@ -109,6 +109,7 @@ app.delete('/api/persons/:id', (request, response) => {
 })
 
 app.post('/api/persons', (request, response) => {
+  console.log(request.body)
   const person = new Person({
     name: request.body.name,
     number: request.body.number

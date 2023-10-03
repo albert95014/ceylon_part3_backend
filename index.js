@@ -58,7 +58,7 @@ app.get('/api/persons', (request, response) => {
 
 app.get('/api/persons/:id', (request, response) => {
   const id = Number(request.params.id) //Number used to convert the id from a string to num
-  const person = persons.find(person => person.id === id)
+  const person = persons.findById(person => person.id === id)
 
   if (person) {
     response.json(person)
@@ -83,18 +83,18 @@ app.delete('/api/persons/:id', (request, response) => {
 
 app.post('/api/persons', (request, response) => {
   const person = new Person({
-    name: request.body
-    // number: request.body
+    name: request.body.name,
+    number: request.body.number
   })
   person.id = Math.floor(Math.random()*1000000)
 
   if (persons.map(person => person.name).includes(person.name)) {
     return response.status(400).json({ 
-      error: 'name must be unique' 
+      error: 'name must be unique!'  
     })
   } else if (!person.name) {
     return response.status(400).json({
-      error: 'name field is empty'
+      error: 'name field is empty!'
     })
   } else {
     // persons = persons.concat(person)

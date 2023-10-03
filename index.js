@@ -73,16 +73,14 @@ app.get('/api/persons', (request, response) => {
   console.log("Got Item!")
   // response.json(persons)
 
-  Person.find({}).then(result => {
+  Person.find({}).then(people => {
     console.log("phonebook:")
-    result.forEach(person => {
-        persons = persons.concat(person)
+    response.json(people)
+    people.forEach(person => {
         console.log(`${person.name} ${person.number}`)
     })
     mongoose.connection.close()
   })
-
-  response.json(persons)
 })
 
 app.get('/api/persons/:id', (request, response) => {

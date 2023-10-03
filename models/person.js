@@ -1,4 +1,3 @@
-//from mongo.js ---------------------------------------
 const mongoose = require('mongoose')
 
 if (process.argv.length<3) {
@@ -29,4 +28,3 @@ const personSchema = new mongoose.Schema({
 // const Person = mongoose.model('Person', personSchema)
 
 module.exports = mongoose.model('Person', personSchema)
-//from mongo.js ---------------------------------------

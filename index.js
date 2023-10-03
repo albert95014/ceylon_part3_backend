@@ -44,13 +44,42 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :p
 //     }
 // ]
 
+// if (process.argv.length > 3) {
+//   const person = new Person({
+//       name: process.argv[3],
+//       number: process.argv[4],
+//   })
+
+//   person.save().then(result => {
+//       console.log(`Added ${process.argv[3]} to the phonebook!`)
+//       console.log(process.argv.length)
+//       mongoose.connection.close()
+//   })
+// } else {
+//   Person.find({}).then(result => {
+//       console.log("phonebook:")
+//       result.forEach(person => {
+//           console.log(`${person.name} ${person.number}`)
+//       })
+//       mongoose.connection.close()
+//   })
+// }
+
 app.get('/', (request, response) => {
   response.send('<h1>Welcome to the database of persons!</h1>')
 })
 
 app.get('/api/persons', (request, response) => {
   console.log("Got Item!")
-  response.json(persons)
+  // response.json(persons)
+
+  Person.find({}).then(result => {
+    console.log("phonebook:")
+    result.forEach(person => {
+        console.log(`${person.name} ${person.number}`)
+    })
+    // mongoose.connection.close()
+})
 })
 
 app.get('/api/persons/:id', (request, response) => {

@@ -32,6 +32,28 @@ personSchema.set('toJSON', {
         delete returnedObject.__v
     }
 })
+
+if (process.argv.length > 3) {
+    const person = new Person({
+        name: process.argv[3],
+        number: process.argv[4],
+    })
+
+    person.save().then(result => {
+        console.log(`Added ${process.argv[3]} to the phonebook!`)
+        console.log(process.argv.length)
+        mongoose.connection.close()
+    })
+} else {
+    Person.find({}).then(result => {
+        console.log("phonebook:")
+        result.forEach(person => {
+            console.log(`${person.name} ${person.number}`)
+        })
+        mongoose.connection.close()
+    })
+}
+
 // const Person = mongoose.model('Person', personSchema)
 
 module.exports = mongoose.model('Person', personSchema)

@@ -110,27 +110,38 @@ app.delete('/api/persons/:id', (request, response) => {
 
 app.post('/api/persons', (request, response) => {
   console.log(request.body)
+  
+  if (request.body.name === undefined) {
+    return response.status(400).json({ error: 'name missing' })
+  }
+
   const person = new Person({
     name: request.body.name,
     number: request.body.number
   })
-  person.id = Math.floor(Math.random()*1000000)
 
-  if (persons.map(person => person.name).includes(person.name)) {
-    return response.status(400).json({ 
-      error: 'name must be unique!'  
-    })
-  } else if (!person.name) {
-    return response.status(400).json({
-      error: 'name field is empty!'
-    })
-  } else {
-    // persons = persons.concat(person)
-    person.save().then(savedPerson => {
-      // persons = persons.concat(savedPerson)
-      response.json(savedPerson)
-    })
-  }
+  person.save().then(savedPerson => {
+    response.json(savedPerson)
+  })
+  // person.id = Math.floor(Math.random()*1000000)
+
+  // if (persons.map(person => person.name).includes(person.name)) {
+  //   return response.status(400).json({ 
+  //     error: 'name must be unique!'  
+  //   })
+  // } else if (!person.name) {
+  //   return response.status(400).json({
+  //     error: 'name field is empty!'
+  //   })
+  // } else {
+  //   // persons = persons.concat(person)
+  //   person.save().then(savedPerson => {
+  //     // persons = persons.concat(savedPerson)
+  //     response.json(savedPerson)
+  //   })
+  // }
+
+
 })
 
 morgan(function (tokens, req, res) {

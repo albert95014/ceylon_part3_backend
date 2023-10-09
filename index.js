@@ -79,7 +79,7 @@ app.get('/api/persons', (request, response) => {
     people.forEach(person => {
         console.log(`${person.name} ${person.number}`)
     })
-    // mongoose.connection.close()
+    mongoose.connection.close()
   })
 })
 
@@ -110,7 +110,7 @@ app.delete('/api/persons/:id', (request, response) => {
 
 app.post('/api/persons', (request, response) => {
   console.log(request.body)
-  
+
   if (request.body.name === undefined) {
     return response.status(400).json({ error: 'name missing' })
   }
@@ -120,9 +120,13 @@ app.post('/api/persons', (request, response) => {
     number: request.body.number
   })
 
-  person.save().then(savedPerson => {
-    response.json(savedPerson)
+  person.save().then(result => {
+    console.log("Person saved!")
+    // response.json(savedPerson)
+
+    mongoose.connection.close()
   })
+
   // person.id = Math.floor(Math.random()*1000000)
 
   // if (persons.map(person => person.name).includes(person.name)) {

@@ -79,26 +79,26 @@ app.get('/api/persons', (request, response) => {
     people.forEach(person => {
         console.log(`${person.name} ${person.number}`)
     })
-    mongoose.connection.close()
   })
 })
 
 app.get('/api/persons/:id', (request, response) => {
-  const id = Number(request.params.id) //Number used to convert the id from a string to num
-  const person = persons.findById(person => person.id === id)
+  console.log(request.params.id)
+  // const id = Number(request.params.id) //Number used to convert the id from a string to num
 
-  if (person) {
-    response.json(person)
-  } else {
-    response.status(404).end()
-  }
+  // //come back later
+  // Person.findById(request.params.id).then(person => {
+  //   console.json(person)
+  // })
+
+  
 })
 
 app.get('/info', (request, response) => {
   const numPersons = persons.length
-  const hey = new Date()
+  const currentDate = new Date()
 
-  response.send(`<p>Phonebook has info for ${numPersons} people</p><p>${hey}</p>`)
+  response.send(`<p>Phonebook has info for ${numPersons} people</p><p>${currentDate}</p>`)
 })
 
 app.delete('/api/persons/:id', (request, response) => {
@@ -120,11 +120,9 @@ app.post('/api/persons', (request, response) => {
     number: request.body.number
   })
 
-  person.save().then(result => {
+  person.save().then(savedPerson => {
     console.log("Person saved!")
-    // response.json(savedPerson)
-
-    mongoose.connection.close()
+    response.json(savedPerson)
   })
 
   // person.id = Math.floor(Math.random()*1000000)

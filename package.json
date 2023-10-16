@@ -8,7 +8,8 @@
     "dev": "nodemon index.js",
     "test": "echo \"error: no test specified\" && exit 1",
     "build:ui": "rm -rf build && cd /Users/alberty/Documents/GitHub/ceylon/part2/phonebook && npm run build && cp -r build ../Users/alberty/Documents/GitHub/ceylon_part3",
-    "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push"
+    "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push",
+    "lint": "eslint ."
   },
   "author": "Albert Y",
   "license": "MIT",
@@ -20,6 +21,7 @@
     "morgan": "^1.10.0"
   },
   "devDependencies": {
+    "eslint": "^8.51.0",
     "nodemon": "^3.0.1"
   }
 }

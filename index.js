@@ -23,60 +23,21 @@ const unknownEndpoint = (request, response) => {
 app.use(express.json())
 app.use(requestLogger)
 
-morgan.token('person', function (req, res) { return JSON.stringify(req.body) })
+morgan.token('person', function (req) { return JSON.stringify(req.body) })
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :person'))
-
-let persons = [
-    // { 
-    //   "id": 1,
-    //   "name": "Arto Hellas", 
-    //   "number": "040-123456"
-    // },
-    // { 
-    //   "id": 2,
-    //   "name": "Ada Lovelace", 
-    //   "number": "39-44-5323523"
-    // },
-    // { 
-    //   "id": 3,
-    //   "name": "Dan Abramov", 
-    //   "number": "432432432432"
-    // }
-]
-
-// if (process.argv.length > 3) {
-//   const person = new Person({
-//       name: process.argv[3],
-//       number: process.argv[4],
-//   })
-
-//   person.save().then(result => {
-//       console.log(`Added ${process.argv[3]} to the phonebook!`)
-//       console.log(process.argv.length)
-//       mongoose.connection.close()
-//   })
-// } else {
-//   Person.find({}).then(result => {
-//       console.log("phonebook:")
-//       result.forEach(person => {
-//           console.log(`${person.name} ${person.number}`)
-//       })
-//       mongoose.connection.close()
-//   })
-// }
 
 app.get('/', (request, response) => {
   response.send('<h1>Welcome to the database of persons!</h1>')
 })
 
 app.get('/api/persons', (request, response) => {
-  console.log("Got Item!")
+  console.log('Got Item!')
 
   Person.find({}).then(people => {
-    console.log("phonebook:")
+    console.log('phonebook:')
     response.json(people)
     people.forEach(person => {
-        console.log(`${person.name} ${person.number}`)
+      console.log(`${person.name} ${person.number}`)
     })
   })
 })
@@ -111,7 +72,7 @@ app.get('/info', (request, response, next) => {
 
 app.delete('/api/persons/:id', (request, response, next) => {
   Person.findByIdAndRemove(request.params.id)
-    .then(result => {
+    .then(() => {
       response.status(204).end()
     })
     .catch(error => {
@@ -133,7 +94,7 @@ app.post('/api/persons', (request, response, next) => {
 
   person.save()
     .then(savedPerson => {
-      console.log("Person saved!")
+      console.log('Person saved!')
       response.json(savedPerson)
     })
     .catch(error => {
@@ -147,7 +108,7 @@ app.put('/api/persons/:id', (request, response, next) => {
     number: request.body.number
   }
 
-  Person.findByIdAndUpdate(request.params.id, updatedPerson, {new: true})
+  Person.findByIdAndUpdate(request.params.id, updatedPerson, { new: true })
     .then(updatedPerson => {
       response.json(updatedPerson)
     })
@@ -169,13 +130,6 @@ morgan(function (tokens, req, res) {
 })
 
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms'))
-
-
-// morgan.token('type', function (req, res) { return req.headers['content-type'], 
-//                                                   req.method['method'],
-//                                                   req.url['url'],
-//                                                   req.status['status']
-//                                                   req.})
 
 app.use(unknownEndpoint)
 
